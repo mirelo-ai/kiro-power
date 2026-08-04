@@ -1,63 +1,44 @@
 # Editing existing audio
 
-Two tools change audio the user already has. Both take input as `{ asset_id }` or as a `{ url }` that
-is a Mirelo `download_urls` link from a prior job. The tool descriptions carry the parameter rules;
-this file is about choosing the right tool and not measuring things you do not need to measure.
+Two tools change audio the user already has. Both take the input as a staged asset or as a download
+link from an earlier Mirelo job. Their own descriptions carry the parameters and the current limits —
+those move with the model version, so read them there rather than trusting a number written here.
 
 ## Which tool for which request
 
+Picking wrong still spends credits, so this is the decision worth getting right:
+
 | The user says | Reach for |
 | --- | --- |
-| "make this cover the whole scene / loop longer" | `extend_audio`, with `loop: true` if it must loop seamlessly |
+| "make this cover the whole scene" / "loop it longer" | `extend_audio`, looping if it must be seamless |
 | "continue this sound to match the rest of the video" | `extend_audio_with_video` |
 | "fix / replace this bit, keep the rest" | `inpaint_audio` |
 | "regenerate the whole thing, differently" | `text_to_sfx` or `video_to_sfx` again — not an edit tool |
 
-An edit tool called on the wrong intent still spends credits. If the user wants a different take of
-the whole sound, generate again rather than inpainting the entire span.
+If the user wants a different take of the whole sound, generate again. Inpainting the entire span is
+the expensive way to get a worse version of that.
 
-## Do not measure the input audio
+## Let the server measure the input
 
-Quoted verbatim from the `extend_audio` and `extend_audio_with_video` tool descriptions:
+The extend tools ask how much **new** audio to add, not what the total should become. Given that, they
+probe the existing clip themselves — so you never need `ffprobe`, and you never need to ask the user
+how long their file is.
 
-> You never need to measure the input audio: pass append_duration_ms (how much new audio to add) and
-> the server probes the prefix with ffprobe and derives the total itself. duration_ms is the legacy
-> total (prefix + extension) and is the only reason to know the input length — prefer
-> append_duration_ms and do not shell out to ffprobe.
+## Inpainting is a span, not a duration
 
-Provide exactly one of the two.
+`inpaint_audio` replaces one stretch and leaves everything outside it untouched — the tool for "there
+is a glitch from 0:05 to 0:12, fix just that part". It takes two absolute positions rather than a
+length. The very start of a file cannot be inpainted, because the model needs context ahead of the
+gap; there is no such restriction at the end. A long file is windowed around the gap automatically, so
+do not trim the input yourself.
 
-## Limits at a glance
+## Chaining without re-uploading
 
-Consolidated because they are split across two tool descriptions. The descriptions are canonical.
-
-| | `extend_audio` | `extend_audio_with_video` |
-| --- | --- | --- |
-| Input audio prefix | ≥ 3 s | ≥ 3 s |
-| `append_duration_ms` | 1000–30000 | 1000–57000 |
-| with `loop: true` | ≥ 2000 | — |
-
-A prefix shorter than 3 s cannot condition the model and is rejected. The video-guided variant allows
-a longer tail because the picture carries the structure. `loop: true` needs at least 2000 ms of new
-audio — less gives the model no room to build a smooth transition back to the start.
-
-## Inpainting
-
-`inpaint_audio` replaces one stretch and leaves everything outside it alone — the tool for "there is a
-glitch from 0:05 to 0:12, fix just that part". The region is two absolute positions, `start_ms` and
-`end_ms`, not a duration. The first second of a file cannot be inpainted: the model needs prefix
-context ahead of the gap. There is no tail restriction, and a long file is windowed around the gap
-automatically, so do not trim the input yourself.
-
-## Chaining
-
-Generate → extend → inpaint needs no re-uploads — pass each job's `result.download_urls` entry as the
-next call's input `url`:
+Generate → extend → inpaint needs no re-uploads: pass each finished job's download link as the next
+call's input. Those links are signed when they are followed, so a long chain does not race an expiry.
 
 ```
-text_to_sfx({ prompt: "rain on a tin roof", duration_ms: 10000, loop: true })  → A
-extend_audio({ audio: { url: "<A download_urls[0]>" }, append_duration_ms: 20000 })  → B
-inpaint_audio({ audio: { url: "<B download_urls[0]>" }, start_ms: 4000, end_ms: 6500 })
+text_to_sfx   → link A
+extend_audio  (input: link A) → link B
+inpaint_audio (input: link B) → final
 ```
-
-Those links are signed when followed, so a long chain does not race an expiry.

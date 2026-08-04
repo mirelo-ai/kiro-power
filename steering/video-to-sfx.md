@@ -4,49 +4,45 @@
 clip — gameplay capture, an animation, a rough cut — and wants sound that lands on what happens on
 screen. `text_to_sfx` is for when there is no clip, or the user wants a standalone asset.
 
-The tool description carries the parameter rules and the current limits. Two things below are worth
-having in front of you anyway.
+The tool's own description carries the parameters, the limits and the rules. Three judgement calls it
+cannot make for you:
 
-## Do not measure the clip yourself
+## Let the server measure the clip
 
-Quoted verbatim from the `video_to_sfx` tool description:
+Do not run `ffprobe`, and do not ask the user how long their video is. Hand over the staged asset and
+the server measures it, then tells you the window it scored. Reach for a duration only when the user
+wants a **shorter** window than the whole clip — that is an editorial choice, and it is what they are
+billed for, so it is worth confirming rather than assuming.
 
-> Do not shell out to ffprobe for duration_ms. With asset_id you can omit it: we measure the uploaded
-> file with one ffprobe pass — exact for every format we accept — and score the rest of the clip from
-> start_offset_ms. Pass duration_ms whenever you want a shorter window than that, since the window is
-> what you are billed for. With url (a chained download_urls link) you must pass duration_ms, because
-> a remote length comes from the container header, which some formats do not carry. inspect_asset
-> reports the same measurement up front if you want it before committing credits, but you no longer
-> have to call it first.
+If a clip comes back refused for being too long, that is deliberate: trimming it silently would bill
+for a window nobody chose. The error names the measurement and the cap, which is what you need in
+order to ask the user which part they actually want scored.
 
-The window actually used comes back as `resolved_duration_ms`. A remainder longer than the cap is
-**refused rather than trimmed**, because trimming would bill for a window nobody chose — the error
-names both the measurement and the cap, so when you hit it you have the numbers you were missing.
-Pick a window with `start_offset_ms` + `duration_ms`, or ask the user which part they want scored.
+## Usually, do not write a prompt
 
-## Do not write a prompt from the footage
+The model already sees the video. A prompt authored by describing the footage is a lossy transcription
+of what it can see, and it competes with the real thing — a wrong guess steers the result away from
+the picture.
 
-The model already sees the video. A `prompt` authored by describing the footage competes with the
-real thing, and a wrong guess steers the result away from the picture.
+Leave the prompt out when the user asked for nothing specific. Add one only to carry an explicit
+instruction: a mood ("sparse and tense"), or a restriction ("only footsteps, no music cues"). Do not
+analyse the video in order to author one.
 
-Omit `prompt` when the user asked for nothing specific. Pass it only to carry an explicit
-instruction — a mood ("sparse and tense"), or a restriction ("only footsteps"). Do not analyse the
-video in order to author one.
+## Do not assume the output is video
+
+Asking for a video output is a request, not a guarantee — a long clip comes back as audio anyway. So
+do not infer the artifact kind from what you asked for. Treat a result as audio unless you know that
+specific artifact is video.
 
 ## Workflow in Kiro
 
 ```
-1. create_upload({ content_type: "video/mp4", filename: "<abs path>/gameplay.mp4" })
-2. run the returned curl_command → HTTP 200
-3. preflight({ endpoint_key: "video-to-sfx/v1.6", duration_ms: 10000 })   # optional, to quote cost
-4. video_to_sfx({ video: { asset_id } })                                  # window = rest of clip
-5. get_job({ job_id }) until status === "succeeded"
-6. download result.download_urls[0] into the project's audio folder
-7. report the path and the credits spent
+1. stage the clip           (steering/file-inputs.md)
+2. preflight                quote the cost to the user
+3. video_to_sfx             pass the asset; no duration, no prompt
+4. get_job                  poll until terminal
+5. download into the project's audio folder, report path + cost
 ```
 
-Step 4 passes no `duration_ms` and no `prompt` on purpose: the clip length is the window, and the
+Step 3 deliberately passes neither a duration nor a prompt: the clip length is the window, and the
 video is the instruction.
-
-Asking for `output: "video"` is a request, not a guarantee — a long clip comes back as audio anyway.
-So do not infer the artifact kind from the flag you sent.
