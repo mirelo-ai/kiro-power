@@ -72,10 +72,24 @@ clients refuse them outright, and they expire on the job's clock rather than on 
 
 Re-polling a job returns the same URLs; only re-running it produces new ones.
 
+## The downloaded file is 0 bytes, and the command reported success
+
+The download link is a `302` to storage and the redirect was not followed. `curl` needs **`-L`**;
+without it, it writes the empty redirect body and still exits 0, so nothing looks wrong until the file
+is opened.
+
+```bash
+curl -sSL -o <path> <url>
+```
+
+`Invoke-WebRequest` follows redirects on its own, so it is the other safe option. Either way, check the
+file size after writing. The generation itself succeeded — re-polling the job returns the same link, so
+there is no need to regenerate and no reason to spend credits again.
+
 ## The transcript fills with download progress noise
 
 On Windows, `Invoke-WebRequest` emits a progress record per chunk. Set
-`$ProgressPreference = 'SilentlyContinue'` before it, or use `curl.exe -sS -o <path> <url>`.
+`$ProgressPreference = 'SilentlyContinue'` before it, or use `curl.exe -sSL -o <path> <url>`.
 
 ## The user asked for music
 

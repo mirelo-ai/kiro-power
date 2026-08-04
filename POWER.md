@@ -140,10 +140,21 @@ the repository, named sensibly, in one turn.
 3. Name the file after the sound, not the job. `footstep-gravel-01.wav` beats `job-abc123.wav`.
 4. Tell the user the path you wrote and what it cost.
 
-**On Windows, silence the download progress meter.** `Invoke-WebRequest` streams a progress record
-per chunk, which floods the transcript with thousands of `Writing request stream...` lines and
-crowds out the rest of the session. Either set `$ProgressPreference = 'SilentlyContinue'` first, or
-download with `curl.exe -sS -o <path> <url>`.
+**A download link is a redirect, so follow it.** Mirelo's short links `302` to storage. With `curl`
+that means **`-L` is mandatory** — without it you get a 0-byte file and exit code 0, which looks like
+success until something tries to play it:
+
+```bash
+curl -sSL -o <path> <url>          # -L is not optional
+```
+
+**On Windows, silence the progress meter.** `Invoke-WebRequest` follows redirects on its own, but
+streams a progress record per chunk, which floods the transcript with thousands of
+`Writing request stream...` lines and crowds out the rest of the session. Set
+`$ProgressPreference = 'SilentlyContinue'` first, or use the `curl.exe -sSL -o` form above.
+
+**Check the size after writing.** A 0-byte or few-hundred-byte file means the redirect was not
+followed, not that the generation failed — the job succeeded and re-polling it returns the same link.
 
 ## Spending credits responsibly
 
