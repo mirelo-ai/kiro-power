@@ -85,11 +85,8 @@ not. If `download_urls` is absent, download the file and stage it with `create_u
 
 ## The user asked for music
 
-There is no music tool on this server. Say it is not available through this MCP server — do not
-approximate it with `text_to_sfx`, which spends credits on a result they cannot use.
-
-Mirelo does generate music, in Mirelo Studio and its editor plugins, so do not report the capability
-as missing from the product.
+Not available on this surface, and `text_to_sfx` is not a substitute. See the music rule in
+`POWER.md` — it is quoted there verbatim from the tool descriptions.
 
 ## A long video is refused rather than trimmed
 

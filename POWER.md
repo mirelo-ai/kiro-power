@@ -1,12 +1,12 @@
 ---
 name: "mirelo"
-displayName: "Mirelo Video Sound"
+displayName: "Mirelo SFX"
 description: "Generate and edit sound effects, Foley and ambience for video, straight from the agent. Score a clip from the video itself, or extend and inpaint audio you already have. Sign in with Mirelo once — no API key to manage."
 keywords: ["sound effects", "sfx", "foley", "ambience", "game audio", "video to sfx", "audio generation", "sound design", "mirelo"]
 author: "Mirelo"
 ---
 
-# Mirelo Video Sound
+# Mirelo SFX
 
 ## Overview
 
@@ -60,6 +60,17 @@ Load only the file that matches the task. Do not read them all up front.
 | Extending a clip, or repairing part of one | `steering/audio-editing.md` |
 | Calling Mirelo from the user's own application code | `steering/api-integration.md` |
 | An error, or a result that will not download | `steering/troubleshooting.md` |
+
+### Source of truth
+
+The server sends a full description with every tool at `tools/list`, and those descriptions are
+canonical: they carry the per-parameter rules, the current limits, and the reasoning. This power does
+not restate them. It covers what a tool description cannot — when to reach for this server at all,
+how to get a file in, how to save a result into the project, and what an error means.
+
+Three rules are quoted here **verbatim** from the tool descriptions rather than paraphrased, because
+getting them wrong spends the user's credits on an unusable result. They are marked as quotes. If a
+quote ever disagrees with what the server sends, the server is right.
 
 ## Tools
 
@@ -135,12 +146,12 @@ asked for alternatives.
 
 ## Music is not available here
 
-There is no music tool on this server, and `text_to_sfx` is not a substitute. A musical prompt sent
-to an SFX model spends the user's credits on something they cannot use.
+Quoted verbatim from the `text_to_sfx` and `video_to_sfx` tool descriptions:
 
-If the user asks for music, **say it is not available through this MCP server** rather than
-approximating it. Mirelo does generate music — in Mirelo Studio and its editor plugins — so do not
-report the capability as missing from the product.
+> Music is not available through this MCP server: there is no music tool here, and text_to_sfx is not
+> a substitute — a musical prompt spends the user's credits on a result they cannot use. If the user
+> asks for music, say it is not available on this surface rather than approximating it. Mirelo does
+> generate music, in Studio and its editor plugins, so do not report the capability as missing.
 
 Audio-to-MIDI and multi-stem generation are likewise not exposed here.
 

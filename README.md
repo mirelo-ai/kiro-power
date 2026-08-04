@@ -1,4 +1,4 @@
-# Mirelo Video Sound — Kiro Power
+# Mirelo SFX — Kiro Power
 
 Generate and edit sound for video from inside [Kiro](https://kiro.dev): sound effects, Foley and
 ambience, scored against the footage itself or written from a text prompt, plus extend and inpaint on
@@ -10,7 +10,7 @@ agent the context to use it well.
 
 ## Install
 
-**From the Kiro marketplace** — find *Mirelo Video Sound* at
+**From the Kiro marketplace** — find *Mirelo SFX* at
 [kiro.dev/powers](https://kiro.dev/powers/) and click **Add to Kiro**.
 
 **From this repository** — in Kiro, open the powers panel → **Add Custom Power** → **Import power
