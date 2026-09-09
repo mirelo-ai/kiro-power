@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "mirelo",
+  "version": "1.0.0",
+  "description": "Mirelo SFX — generate and edit sound effects, Foley and ambience for video, straight from the agent. Score a clip from the video itself, or extend and inpaint audio you already have. Sign in with Mirelo once — no API key to manage.",
+  "author": {
+    "name": "Mirelo",
+    "url": "https://mirelo.ai"
+  },
+  "keywords": ["sound effects", "sfx", "foley", "ambience", "game audio", "video to sfx", "audio generation", "sound design", "mirelo"],
+  "homepage": "https://mirelo.ai/mcp",
+  "repository": "https://github.com/mirelo-ai/kiro-power",
+  "license": "MIT"
+}

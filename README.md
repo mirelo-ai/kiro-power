@@ -6,7 +6,9 @@ audio you already have.
 
 This repository is the [Kiro Power](https://kiro.dev/docs/powers/) for the hosted
 [Mirelo MCP server](https://mirelo.ai/mcp). Installing it registers the MCP server and gives the Kiro
-agent the context to use it well.
+agent the context to use it well. It follows the
+[Agent Plugins specification](https://agent-plugins.org), the open plugin format Kiro powers are
+built on, so the same package also works in other clients that support the format.
 
 ## Install
 
@@ -42,13 +44,14 @@ There's a glitch from 0:05 to 0:12 — regenerate just that section, keep the re
 
 | File | Purpose |
 | --- | --- |
-| `POWER.md` | Power metadata, tool reference, job model, and the rules the agent follows |
+| `plugin.json` | [Agent Plugins](https://agent-plugins.org) manifest: name, keywords, and metadata |
 | `mcp.json` | MCP server registration (`https://mcp.mirelo.ai/mcp`) |
-| `steering/file-inputs.md` | Staging local video and audio files |
-| `steering/video-to-sfx.md` | Scoring a clip; choosing the window to score |
-| `steering/audio-editing.md` | Extend and inpaint |
-| `steering/api-integration.md` | Calling Mirelo from your own application code |
-| `steering/troubleshooting.md` | Errors and what they mean |
+| `skills/mirelo-sfx/SKILL.md` | The skill: tool reference, job model, and the rules the agent follows |
+| `skills/mirelo-sfx/references/file-inputs.md` | Staging local video and audio files |
+| `skills/mirelo-sfx/references/video-to-sfx.md` | Scoring a clip; choosing the window to score |
+| `skills/mirelo-sfx/references/audio-editing.md` | Extend and inpaint |
+| `skills/mirelo-sfx/references/api-integration.md` | Calling Mirelo from your own application code |
+| `skills/mirelo-sfx/references/troubleshooting.md` | Errors and what they mean |
 | `assets/` | Logo marks |
 
 ## Not on this surface

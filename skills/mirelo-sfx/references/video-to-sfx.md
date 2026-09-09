@@ -37,7 +37,7 @@ specific artifact is video.
 ## Workflow in Kiro
 
 ```
-1. stage the clip           (steering/file-inputs.md)
+1. stage the clip           (references/file-inputs.md)
 2. preflight                quote the cost to the user
 3. video_to_sfx             pass the asset; no duration, no prompt
 4. get_job                  poll until terminal

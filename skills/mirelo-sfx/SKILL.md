@@ -1,9 +1,10 @@
 ---
-name: "mirelo"
-displayName: "Mirelo SFX"
-description: "Generate and edit sound effects, Foley and ambience for video, straight from the agent. Score a clip from the video itself, or extend and inpaint audio you already have. Sign in with Mirelo once — no API key to manage."
-keywords: ["sound effects", "sfx", "foley", "ambience", "game audio", "video to sfx", "audio generation", "sound design", "mirelo"]
-author: "Mirelo"
+name: mirelo-sfx
+description: Generate and edit sound effects, Foley and ambience with the hosted Mirelo MCP server — score a video clip from the footage itself, create SFX from a text prompt, or extend and inpaint audio you already have. Use when the task involves sound effects, game audio, ambience beds, adding or syncing sound to video or gameplay footage, lengthening an audio clip, or repairing a damaged section of audio.
+license: MIT
+metadata:
+  author: Mirelo
+  version: "1.0.0"
 ---
 
 # Mirelo SFX
@@ -19,7 +20,7 @@ The tools arrive from the hosted Mirelo MCP server. There is no API key to creat
 you sign in through the browser once, and generations bill the credits on that Mirelo account — the
 same balance the web app uses.
 
-**Reach for this power when the task involves** adding sound effects or Foley to video or gameplay
+**Reach for this skill when the task involves** adding sound effects or Foley to video or gameplay
 footage, building an ambience bed for a scene, generating one-off SFX assets for a game or app,
 lengthening an existing audio clip, or repairing a damaged section of audio.
 
@@ -67,18 +68,18 @@ No environment variables, keys or config files are required at any point.
 - **Authorization:** OAuth — browser-based **Sign in with Mirelo**, no client credentials to supply
 - **Billing:** generations spend credits on the signed-in Mirelo account. Connecting is free.
 
-## Steering files
+## Reference files
 
 Load only what the task calls for. Do not read them all up front.
 
 | Working on | Read |
 | --- | --- |
 | First run, signing in, or a text-prompt sound effect | this file is enough |
-| Sending a local video or audio file to Mirelo | `steering/file-inputs.md` |
-| Scoring a video clip, choosing which part to score | `steering/video-to-sfx.md` |
-| Extending a clip, or repairing part of one | `steering/audio-editing.md` |
-| Calling Mirelo from the user's own application code | `steering/api-integration.md` |
-| An error, or a result that will not download | `steering/troubleshooting.md` |
+| Sending a local video or audio file to Mirelo | `references/file-inputs.md` |
+| Scoring a video clip, choosing which part to score | `references/video-to-sfx.md` |
+| Extending a clip, or repairing part of one | `references/audio-editing.md` |
+| Calling Mirelo from the user's own application code | `references/api-integration.md` |
+| An error, or a result that will not download | `references/troubleshooting.md` |
 
 The server sends a full description with every tool, and those descriptions are canonical: they carry
 the parameter rules, the current limits and the reasoning, and they are always more current than this
@@ -213,8 +214,8 @@ get_job({ job_id })
   → report the path and the credits spent
 ```
 
-For a video clip, `steering/file-inputs.md` covers staging the file first and
-`steering/video-to-sfx.md` covers choosing what to score.
+For a video clip, `references/file-inputs.md` covers staging the file first and
+`references/video-to-sfx.md` covers choosing what to score.
 
 ## Best practices
 
@@ -239,7 +240,7 @@ For a video clip, `steering/file-inputs.md` covers staging the file first and
 
 - A Mirelo account (free at <https://mirelo.ai>). Credits are spent by generation, not by connecting.
 - Outbound network access from the shell for the upload. Kiro runs real local commands, so this
-  normally works out of the box; `steering/file-inputs.md` has the fallbacks if it does not.
+  normally works out of the box; `references/file-inputs.md` has the fallbacks if it does not.
 - MCP access on the account. Every signed-in Mirelo account has it by default; a `403` pointing at
   <https://mirelo.ai/mcp> means this one does not.
 

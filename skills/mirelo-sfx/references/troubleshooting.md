@@ -6,7 +6,7 @@ The server is not authenticated yet. Before **Sign in with Mirelo** completes, a
 back with a clean error — it simply does not finish.
 
 Do not retry it, and do not go looking for a fault. Ask the user to complete sign-in (see the setup
-section in `POWER.md`), then call `get_account` to confirm.
+section in `SKILL.md`), then call `get_account` to confirm.
 
 ## No Mirelo tools are listed at all
 
@@ -38,7 +38,7 @@ file afterwards, so mint a new upload with the correct type and re-upload.
 ## The upload fails with a proxy or connection error
 
 The shell has no outbound access — a client setting, not a Mirelo error. Retrying will not help. See
-`steering/file-inputs.md` for the two ways round it.
+`references/file-inputs.md` for the two ways round it.
 
 ## The upload link stopped working
 
@@ -94,7 +94,7 @@ On Windows, `Invoke-WebRequest` emits a progress record per chunk. Set
 ## The user asked for music
 
 Not available on this surface, and the SFX tools are not a substitute. See the music section in
-`POWER.md`.
+`SKILL.md`.
 
 ## Getting help
 
